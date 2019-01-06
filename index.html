@@ -105,7 +105,13 @@
       .copy-button {
         position: absolute;
         top: 10px;
-        right: 100px;
+        right: 140px;
+      }
+
+      .copy-css-button {
+        position: absolute;
+        top: 10px;
+        right: 60px;
       }
 
       button {
@@ -402,7 +408,7 @@
         e.preventDefault();
       };
 
-      filePicker.onchange = function(e) {
+      filePicker.onchange = function() {
         var files = [].slice.call(filePicker.files);
         files.forEach(function(file) {
           var reader = new FileReader();
@@ -465,6 +471,20 @@
           document.execCommand('copy')
         };
         div.appendChild(copy);
+
+        var copyCSS = document.createElement("button");
+        copyCSS.innerHTML = 'Copy CSS';
+        copyCSS.className = 'copy-css-button';
+        copyCSS.onclick = function() {
+          var dataImage = ta.value;
+          var temp = document.createElement('input');
+          temp.setAttribute('value', 'background-image: url(' + dataImage + ');');
+          document.body.appendChild(temp);
+          temp.select();
+          document.execCommand('copy');
+          document.body.removeChild(temp);
+        };
+        div.appendChild(copyCSS);
 
         results.appendChild(div);
         if (localStorage) localStorage.setItem("b64-" + filename, dataUri);
