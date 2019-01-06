@@ -45,7 +45,7 @@
       .item {
         position: relative;
         margin: 10px;
-        padding: 20px;
+        padding: 12px 20px 20px;
         background: hsl(224, 29%, 10%);
         border: 1px solid hsl(224, 29%, 22%);
       }
@@ -100,6 +100,14 @@
         top: 62px;
         margin: auto;
         z-index: 1;
+      }
+
+      .item > div {
+        width: min-content;
+        max-width: 100%;
+        margin: 0 auto 4px;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .copy-button {
@@ -442,10 +450,6 @@
         };
         div.appendChild(remove);
 
-        var name = document.createElement("div");
-        name.innerHTML = filename;
-        div.appendChild(name);
-
         if (/^data:image/.test(dataUri)) {
           var imgDiv = document.createElement("div");
           var img = document.createElement("img");
@@ -455,6 +459,10 @@
           imgDiv.appendChild(img);
           div.appendChild(imgDiv);
         }
+
+        var name = document.createElement("div");
+        name.innerHTML = filename;
+        div.appendChild(name);
 
         var ta = document.createElement("textarea");
         ta.onclick = function() {
