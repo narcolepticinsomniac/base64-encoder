@@ -116,10 +116,11 @@
             var img = new Image();
             img.onload = function() {
               var canvas = document.createElement('canvas');
-              canvas.width = img.width;
-              canvas.height = img.height;
+              var scale = Math.min(1, 800 / Math.max(img.width, img.height));
+              canvas.width = Math.round(img.width * scale);
+              canvas.height = Math.round(img.height * scale);
               var ctx = canvas.getContext('2d');
-              ctx.drawImage(img, 0, 0);
+              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
               resolve(canvas.toDataURL(mimeType, quality));
             };
             img.onerror = reject;
@@ -133,10 +134,10 @@
       async function processFiles(fileList) {
         var files = [].slice.call(fileList);
         for (const file of files) {
-          // Compress raster images to WebP at 0.75 quality (preserves transparency, shrinks size)
+          // Compress raster images to WebP at 0.5 quality (preserves transparency, shrinks size)
           if (file.type.startsWith('image/') && file.type !== 'image/svg+xml') {
             try {
-              var compressedDataUri = await compressImage(file, 0.75, 'image/webp');
+              var compressedDataUri = await compressImage(file, 0.5, 'image/webp');
               fileLoaded(file.name, compressedDataUri);
               continue;
             } catch (err) {
