@@ -110,26 +110,52 @@
       dropper.ondragleave = function(e) { dropper.className = ''; e.preventDefault(); };
 
       function compressImage(file, quality, mimeType) {
-        return createImageBitmap(file, { colorSpaceConversion: 'none' }).then(function(bitmap) {
-          var maxDim = 800;
-          var width = bitmap.width;
-          var height = bitmap.height;
-          if (width > maxDim || height > maxDim) {
-            if (width > height) {
-              height = Math.round((height * maxDim) / width);
-              width = maxDim;
-            } else {
-              width = Math.round((width * maxDim) / height);
-              height = maxDim;
-            }
-          }
-          var canvas = document.createElement('canvas');
-          canvas.width = width;
-          canvas.height = height;
-          var ctx = canvas.getContext('2d', { colorSpace: 'srgb' });
-          ctx.drawImage(bitmap, 0, 0, width, height);
-          bitmap.close();
-          return canvas.toDataURL(mimeType, quality);
+        return new Promise(function(resolve, reject) {
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            var img = new Image();
+            img.onload = function() {
+              var canvas = document.createElement('canvas');
+              var scale = Math.min(1, 800 / Math.max(img.width, img.height));
+              canvas.width = Math.round(img.width * scale);
+              canvas.height = Math.round(img.height * scale);
+              var ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+              canvas.toBlob(function(blob) {
+                blob.arrayBuffer().then(function(buf) {
+                  var bytes = new Uint8Array(buf);
+                  // Strip embedded ICCP color profile chunk if present in WebP
+                  if (mimeType === 'image/webp' && bytes.length > 20) {
+                    var str = String.fromCharCode.apply(null, bytes.slice(0, 40));
+                    var iccpIdx = str.indexOf('ICCP');
+                    if (iccpIdx !== -1) {
+                      var view = new DataView(buf);
+                      var chunkSize = view.getUint32(iccpIdx + 4, true);
+                      var paddedSize = chunkSize + (chunkSize % 2);
+                      var totalRemove = 8 + paddedSize;
+                      var cleaned = new Uint8Array(bytes.length - totalRemove);
+                      cleaned.set(bytes.slice(0, iccpIdx), 0);
+                      cleaned.set(bytes.slice(iccpIdx + totalRemove), iccpIdx);
+                      // Update RIFF file size header and VP8X ICC flag
+                      var newView = new DataView(cleaned.buffer);
+                      newView.setUint32(4, cleaned.length - 8, true);
+                      if (String.fromCharCode.apply(null, cleaned.slice(12, 16)) === 'VP8X') {
+                        cleaned[20] &= ~0x20;
+                      }
+                      bytes = cleaned;
+                    }
+                  }
+                  var bin = '';
+                  for (var i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+                  resolve('data:' + mimeType + ';base64,' + btoa(bin));
+                });
+              }, mimeType, quality);
+            };
+            img.onerror = reject;
+            img.src = e.target.result;
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
         });
       }
       
