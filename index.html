@@ -4,11 +4,16 @@
     <title>Base64 File Encoder</title>
     <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AsFCic7/MeulgAAAtJJREFUOMuFk01sVFUYhp9z7/RymZli/5DG1AKZS9JJC2JN5CfOAKVElhoWWgwgaVpWEBA0xgoxQWJclFYUiaWEMgt+pGhcyM5MK9bQsoIUp6WbmWlKm9AfZuy01d5zDoshIyUNPtvv+9583/ueIyIXO9jz4b7qZDJ5dPzRowrXdQHB4mgsy9Ll5eU9RcXFX0kpx4TW+s1Ix6U/z7S2mul0GiklLyIvL4+XV6ygI3JpIOA4QU8iHj/yTUuLmUqlUEohpUQIgWmaCLFwE9d1kVLycGSE9rbzFUqpkGd8fOKVTCaD67qsXbeW9+t2M52Zpr3tPJMTEzkRr9fLe3V12LbND+fO0d/fD/AGfb293c6q1Xr/3n36WdKptK5+bb0OrFylV79ark+d/DJXq3DW6J21O7RS6ogBkJmZ4bvvzwKw6513uXblKvnL8tm0eTPz8/PYts1nnzct6olHKUUoFMLr8wFw7+5dtFacaGpidm4O0zS5GIkwODBAwHHweDwLBAylFFVVVQAopbj3132udXbS03ub0tJS3gqH2bBxA6ebm8lGvBDjuZg5fPAQiUSCkuXLOfbJx3x07ChTk5OkplIYRrY9FA5TUFiYFTCEweCDwafzmiuXL9MVjQJQXFJCMBiksKiIq50/YlkWAG0X2qmsrMx6YJgGt7p/Z3r6b/z+fBoaG9m2rQaA7q4uvjh+AmvJEvw+H9d//gnLsni7dgder/e/EyzL4kBDIwDNrS0EnAADsRg3Om8wOjpKIh4nOTycOyERjzM3O5vdYOlS77+2bdNz6w9qwltZX/06j6emiEajGELkHtJMJsOe3R9gmiZSSnx+P4DyOGucm2VlZbVDQ0MkkwmSyQQAprHQXykld/r6sl5pTc327QghfhFa64KxsbHfzp75tjoWiyEXiepZXiooYMvWLeyvr/9aCPFp7rcopTYCQf6ff4QQvwohUgBPAOChM1qzelz8AAAAAElFTkSuQmCC">
     <style>
-      html { min-height: 100vh; }
+      :root {
+        color-scheme: dark;
+      }
+      html {
+        min-height: 100vh;
+      }
       body {
         text-align: center;
         overflow-y: overlay;
-        font-family: Helvetica;
+        font-family: Arial, Helvetica, sans-serif;
         position: relative;
         width: 100%;
         min-height: 100vh;
@@ -31,7 +36,11 @@
         box-sizing: border-box;
         font-size: 15px;
       }
-      input, .item div, .dnd { color: hsl(0, 0%, 86%); }
+      input,
+      .item div,
+      .dnd {
+        color: hsl(0, 0%, 86%);
+      }
       .item {
         position: relative;
         margin: 10px;
@@ -39,7 +48,11 @@
         background: hsl(224, 29%, 10%);
         border: 1px solid hsl(224, 29%, 22%);
       }
-      .remove { position: absolute; right: 10px; top: 10px; }
+      .remove {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
       textarea {
         width: calc(100% - 8px);
         max-width: calc(100% - 8px);
@@ -49,15 +62,43 @@
         font-size: 13px;
         cursor: auto;
         color: hsl(0, 0%, 86%);
+        outline: 0;
+        transition: border-color .2s;
         background: hsl(0, 0%, 14%);
         border: 1px solid hsl(224, 29%, 22%);
       }
-      #results { position: relative; padding: 20px 50px; box-sizing: border-box; }
-      #dropper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-      #dropper.hover { background: lightblue; z-index: 100; }
-      #file-picker { display: none; }
-      #choose-files { position: absolute; width: 92px; left: 0; right: 0; top: 62px; margin: auto; z-index: 1; }
-      .item>div {
+      textarea:focus {
+        border-color: hsl(224, 50%, 56%);
+      }
+      #results {
+        position: relative;
+        padding: 20px 50px;
+        box-sizing: border-box;
+      }
+      #dropper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+      #dropper.hover {
+        background: lightblue;
+        z-index: 100;
+      }
+      #file-picker {
+        display: none;
+      }
+      #choose-files {
+        position: absolute;
+        width: 92px;
+        left: 0;
+        right: 0;
+        top: 62px;
+        margin: auto;
+        z-index: 1;
+      }
+      .item > div {
         width: min-content;
         max-width: 100%;
         margin: 0 auto 4px;
@@ -65,8 +106,16 @@
         text-overflow: ellipsis;
         white-space: nowrap;
       }
-      .copy-button { position: absolute; top: 10px; right: 140px; }
-      .copy-css-button { position: absolute; top: 10px; right: 60px; }
+      .copy-button {
+        position: absolute;
+        top: 10px;
+        right: 140px;
+      }
+      .copy-css-button {
+        position: absolute;
+        top: 10px;
+        right: 60px;
+      }
       button {
         background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAAoCAQAAAB+iOP/AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfhCBkTHDNLahAxAAAAHWlUWHRDb21tZW50AAAAAABDcmVhdGVkIHdpdGggR0lNUGQuZQcAAABhSURBVAjXVcpLCgIxAATRl9gITmblxlt4/2t4B28g+Blh4sIh6Kaopqv0M1mR7s/GrKuu0mVBFmWAvMfxQp7IfeCBXLCrp6vcdNkjR6QpMiEHNmu6NGQemBSZ9c3at/uNP/cTHeX/1YOFAAAAAElFTkSuQmCC);
         background-color: hsl(0, 0%, 9%);
@@ -79,7 +128,7 @@
         color: hsl(0, 0%, 86%);
         font: 13px Arial;
         padding: 2px 6px;
-        transition: background-image .3s, background-color .3s, border-color .3s, color .3s;
+        transition: background-image .2s, background-color .2s, border-color .2s, color .2s;
         outline: none;
       }
       button:hover, button:focus {
