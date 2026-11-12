@@ -252,7 +252,7 @@
         div.className = 'item';
         var remove = document.createElement("button");
         remove.className = 'remove';
-        remove.innerHTML = 'x';
+        remove.innerHTML = '✖';
         remove.onclick = function() {
           if (localStorage) localStorage.removeItem("b64-" + filename);
           results.removeChild(div);
