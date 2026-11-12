@@ -110,27 +110,29 @@
       dropper.ondragleave = function(e) { dropper.className = ''; e.preventDefault(); };
 
       function compressImage(file, quality, mimeType) {
-        return new Promise(function(resolve, reject) {
-          var reader = new FileReader();
-          reader.onload = function(e) {
-            var img = new Image();
-            img.onload = function() {
-              var canvas = document.createElement('canvas');
-              var scale = Math.min(1, 800 / Math.max(img.width, img.height));
-              canvas.width = Math.round(img.width * scale);
-              canvas.height = Math.round(img.height * scale);
-              var ctx = canvas.getContext('2d');
-              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-              resolve(canvas.toDataURL(mimeType, quality));
-            };
-            img.onerror = reject;
-            img.src = e.target.result;
-          };
-          reader.onerror = reject;
-          reader.readAsDataURL(file);
+        return createImageBitmap(file, { colorSpaceConversion: 'none' }).then(function(bitmap) {
+          var maxDim = 800;
+          var width = bitmap.width;
+          var height = bitmap.height;
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          var canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          var ctx = canvas.getContext('2d', { colorSpace: 'srgb' });
+          ctx.drawImage(bitmap, 0, 0, width, height);
+          bitmap.close();
+          return canvas.toDataURL(mimeType, quality);
         });
       }
-
+      
       async function processFiles(fileList) {
         var files = [].slice.call(fileList);
         for (const file of files) {
