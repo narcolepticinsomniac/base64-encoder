@@ -16,7 +16,7 @@
   'use strict';
 
       // Update this if your hosted or local encoder URL differs
-  const ENCODER_URL = 'file:///C:/Users/D/Downloads/index.html';
+  const ENCODER_URL = 'https://narcolepticinsomniac.github.io/base64-encoder/';
   const isEncoderPage = location.href.startsWith(ENCODER_URL) || location.href.includes('base64-encoder');
 
   let lastRightClickedImg = '';
