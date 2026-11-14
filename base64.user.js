@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Base64 Encoder CORS Bypass & Context Menu
 // @namespace    https://github.com/narcolepticinsomniac/base64-encoder
-// @version      2026-11-13
+// @version      2026-11-14
 // @updateURL    https://github.com/narcolepticinsomniac/base64-encoder/raw/refs/heads/gh-pages/base64.user.js
 // @downloadURL  https://github.com/narcolepticinsomniac/base64-encoder/raw/refs/heads/gh-pages/base64.user.js
 // @description  Adds right-click "Encode Image to Base64" (with Shadow DOM & Imagus support) + CORS bypass
@@ -11,6 +11,7 @@
 // @grant        GM.xmlHttpRequest
 // @grant        GM.openInTab
 // @grant        GM_registerMenuCommand
+// @license      MIT
 // @connect      *
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAPFBMVEUAAAAAAAAAAAAkJCQxMTH///+Tk5NGRkaenp7r6+vHx8fY2Njz8/NYWFiFhYXh4eFra2t2dna6urqkpKRYtOs9AAAAAnRSTlMCtxGgiZUAAAC7SURBVHgBrI9FAoVQCEUVX3fsf68fDGxH/06IQw7DCC8aPxhR+NAf4CRQ5JC9QCFRCh2N1lygxZwjx0sZLmONRJET0aYzFMQieZkbGdptUUGniloqw2Woz01DkNKCwojhJDcZj41n2CQrYeMZri92NLYVgHSAkV+kVqWUo2IjZliWxqXVyE3x3qnOkHdSk03OuUzVTi9QSRY9fzzo+Eun6PgKqWRCPsKsmn3+DS2ymambhvAAvIkab3YAAGj/Czr+mBsfAAAAAElFTkSuQmCC
 // ==/UserScript==
