@@ -296,17 +296,12 @@
       const companionBadge = document.getElementById('companion-badge');
       
       label.addEventListener('click', e => {
-              // Prevent double-triggering if the user clicked directly on the select itself
         if (e.target === select) return;
-      
-              // Prevent default label behavior so it doesn't interfere with the picker
         e.preventDefault();
-      
         try {
           select.focus();
           select.showPicker();
         } catch (error) {
-                // Fallback for older browsers that do not support showPicker()
           select.focus();
         }
       });
