@@ -740,7 +740,6 @@
         }
       };
       
-            // Page-load restore loop from IndexedDB
       dbGetAllItems().then(items => {
         items
           .sort((a, b) => a.ts - b.ts)
